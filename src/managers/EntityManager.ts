@@ -4,6 +4,7 @@ import Bullet from "../entities/Bullet.ts";
 import Enemy from "../entities/Enemy.ts";
 import Player from "../entities/Player.ts";
 import SinusoidalEnemy from "../entities/SinusoidalEnemy.ts";
+import type {SinusoidalEnemyData} from "../gameData/SinusoidalEnemyData.ts";
 import GroupUtils from "../utils/GroupUtils.ts";
 import GameConstants from "../GameConstants.ts";
 import RegistryConstants from "../RegistryConstants.ts";
@@ -14,7 +15,6 @@ export default class EntityManager extends Plugins.ScenePlugin {
 
     private static readonly ENEMY_SPAWN_DELAY_MS: number = 1500;
     private static readonly MAX_ACTIVE_ENEMIES: number = 5;
-    private static readonly SINUSOIDAL_ENEMY_SPAWN_DELAY_MS: number = 3000;
     private static readonly MAX_ACTIVE_SINUSOIDAL_ENEMIES: number = 3;
 
     // noinspection JSUnusedGlobalSymbols
@@ -88,8 +88,9 @@ export default class EntityManager extends Plugins.ScenePlugin {
             loop: true
         });
 
+        const sinusoidalData = this.scene!.cache.json.get(GameConstants.DataKeys.SINUSOIDAL_ENEMY) as SinusoidalEnemyData;
         this.scene!.time.addEvent({
-            delay: EntityManager.SINUSOIDAL_ENEMY_SPAWN_DELAY_MS,
+            delay: sinusoidalData.spawnRateMs,
             callback: () => this.spawnEnemy(this._sinusoidalEnemies, EntityManager.MAX_ACTIVE_SINUSOIDAL_ENEMIES),
             loop: true
         });

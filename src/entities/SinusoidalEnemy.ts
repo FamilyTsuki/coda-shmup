@@ -1,15 +1,17 @@
 import SpreadWeapon from "../components/SpreadWeapon.ts";
 import Weapon from "../components/Weapon.ts";
 import type {BulletData} from "../gameData/BulletData.ts";
+import type {SinusoidalEnemyData} from "../gameData/SinusoidalEnemyData.ts";
+import GameConstants from "../GameConstants.ts";
 import Enemy from "./Enemy.ts";
 
 export default class SinusoidalEnemy extends Enemy {
     private static readonly TINT_COLOR: number = 0x4cc9f0;
 
-    protected _frequency: number = 0.003;
-    protected _amplitude: number = 60;
-    protected _bulletCount: number = 3;
-    protected _spreadAngleDeg: number = 30;
+    protected _frequency: number;
+    protected _amplitude: number;
+    protected _bulletCount: number;
+    protected _spreadAngleDeg: number;
 
     private _offsetX: number = 0;
     private _velocityX: number = 0;
@@ -27,6 +29,12 @@ export default class SinusoidalEnemy extends Enemy {
     }
 
     public override init(bulletsGroup: Phaser.Physics.Arcade.Group) {
+        const data = this.scene.cache.json.get(GameConstants.DataKeys.SINUSOIDAL_ENEMY) as SinusoidalEnemyData;
+        this._frequency = data.movement.frequency;
+        this._amplitude = data.movement.amplitude;
+        this._bulletCount = data.spreadShot.bulletCount;
+        this._spreadAngleDeg = data.spreadShot.spreadAngleDeg;
+
         super.init(bulletsGroup);
         this.setTint(SinusoidalEnemy.TINT_COLOR);
     }
