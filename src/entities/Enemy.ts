@@ -18,7 +18,7 @@ export default class Enemy extends Entity {
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
         this.addComponent(new Health(1, this));
         this.addComponent(new Movement(0.2));
-        this.addComponent(new Weapon(bulletsGroup, this._bulletData));
+        this.addComponent(this.createWeapon(bulletsGroup));
 
         // Listen once per enemy, not on every enable(): pooled enemies are reused many times
         const health = this.getComponent(Health);
@@ -81,6 +81,10 @@ export default class Enemy extends Entity {
 
         this.disableBody(true, true);
         this._shootTimer.paused = true;
+    }
+
+    protected createWeapon(bulletsGroup: Phaser.Physics.Arcade.Group): Weapon {
+        return new Weapon(bulletsGroup, this._bulletData);
     }
 
     protected restoreDefaultTint() {

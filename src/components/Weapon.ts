@@ -7,8 +7,8 @@ import IComponent from "./IComponent.ts";
 export default class Weapon implements IComponent {
     public enabled: boolean = true;
 
-    private readonly _bullets: Physics.Arcade.Group;
-    private readonly _bulletData: BulletData;
+    protected readonly _bullets: Physics.Arcade.Group;
+    protected readonly _bulletData: BulletData;
 
     constructor(bullets: Physics.Arcade.Group, bulletData: BulletData) {
         if (!bullets) {
@@ -26,21 +26,16 @@ export default class Weapon implements IComponent {
         if (!this._bullets)
             return;
 
+        this.spawnBullet(source, 0);
+    }
+
+    protected spawnBullet(source: Entity, angleOffsetRad: number = 0) {
         const bullet: Bullet = this._bullets.get() as Bullet;
         if (bullet) {
-            // Get forward vector of the source entity
-            const sourceForward: Phaser.Math.Vector2 = new Phaser.Math.Vector2(1, 0).rotate(source.rotation);
+            const sourceForward: Phaser.Math.Vector2 = new Phaser.Math.Vector2(1, 0).rotate(source.rotation + angleOffsetRad);
             const bulletVelocity: Phaser.Math.Vector2 = sourceForward.clone().scale(this._bulletData.speed);
             bullet.enable(source.x + sourceForward.x * source.arcadeBody.radius, source.y + sourceForward.y * source.arcadeBody.radius,
                 bulletVelocity.x, bulletVelocity.y, this._bulletData);
-
-            // Maths way
-            // const forwardVectorX: number = Math.cos(source.rotation);
-            // const forwardVectorY: number = Math.sin(source.rotation);
-            // const bulletVelocityX: number = forwardVectorX * this._bulletData.speed;
-            // const bulletVelocityY: number = forwardVectorY * this._bulletData.speed;
-            // bullet.enable(source.x + forwardVectorX * source.arcadeBody.radius, source.y + forwardVectorY * source.arcadeBody.radius,
-            //     bulletVelocityX, bulletVelocityY, this._bulletData);
         }
     }
 }
