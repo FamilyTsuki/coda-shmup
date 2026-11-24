@@ -1,3 +1,5 @@
+import SpreadWeapon from "../components/SpreadWeapon.ts";
+import Weapon from "../components/Weapon.ts";
 import type {BulletData} from "../gameData/BulletData.ts";
 import Enemy from "./Enemy.ts";
 
@@ -6,6 +8,8 @@ export default class SinusoidalEnemy extends Enemy {
 
     protected _frequency: number = 0.003;
     protected _amplitude: number = 60;
+    protected _bulletCount: number = 3;
+    protected _spreadAngleDeg: number = 30;
 
     private _offsetX: number = 0;
     private _velocityX: number = 0;
@@ -17,6 +21,10 @@ export default class SinusoidalEnemy extends Enemy {
         speed: 400,
         damage: 1,
     };
+
+    protected override createWeapon(bulletsGroup: Phaser.Physics.Arcade.Group): Weapon {
+        return new SpreadWeapon(bulletsGroup, this._bulletData, this._bulletCount, this._spreadAngleDeg);
+    }
 
     public override init(bulletsGroup: Phaser.Physics.Arcade.Group) {
         super.init(bulletsGroup);
