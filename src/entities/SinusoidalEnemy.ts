@@ -1,7 +1,9 @@
 import { Scene } from "phaser";
+import GameConstants from "../GameConstants.ts";
 import SpreadWeapon from "../components/SpreadWeapon.ts";
 import Weapon from "../components/Weapon.ts";
 import type { BulletData } from "../gameData/BulletData.ts";
+import type { SinusoidalEnemyData } from "../gameData/SinusoidalEnemyData.ts";
 import Enemy from "./Enemy.ts";
 
 export default class SinusoidalEnemy extends Enemy {
@@ -41,6 +43,17 @@ export default class SinusoidalEnemy extends Enemy {
     }
 
     public override init(bulletsGroup: Phaser.Physics.Arcade.Group): void {
+        const config = this.scene.cache.json.get(
+            GameConstants.DataKeys.SINUSOIDAL_ENEMY
+        ) as SinusoidalEnemyData | undefined;
+
+        if (config) {
+            this._frequency = config.movement.frequency;
+            this._amplitude = config.movement.amplitude;
+            this._bulletCount = config.spreadShot.bulletCount;
+            this._spreadAngleDeg = config.spreadShot.spreadAngleDeg;
+        }
+
         super.init(bulletsGroup);
         this.setTint(this._tintColor);
     }
